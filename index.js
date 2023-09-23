@@ -2,16 +2,9 @@ import { Input, Telegraf } from "telegraf";
 import { message } from "telegraf/filters";
 import { generateCodeImage } from "./lib/carbon.js";
 import { getImage } from "./lib/mods.js";
-import pino from "pino";
-import pretty from "pino-pretty";
 import express from "express";
 
-const logger = pino(
-  pretty({
-    colorize: true,
-    colorizeObjects: true,
-  })
-);
+const logger = { info: console.log };
 
 const defaultAvatar = "https://avatars.githubusercontent.com/u/124599?v=4";
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -22,8 +15,8 @@ const webhookDomain =
   process.env.WEBHOOK_DOMAIN ||
   "https://example.com";
 
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+// process.once("SIGINT", () => bot.stop("SIGINT"));
+// process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
 bot.start((ctx) => ctx.reply("Welcome to Code Beautifier Bot"));
 bot.help((ctx) => ctx.reply("Send me a code to beautify"));
@@ -71,7 +64,12 @@ bot.on(message("text"), async (ctx) => {
 });
 
 const app = express();
-app.use(await bot.createWebhook({ domain: "https://" + webhookDomain }));
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.use(await bot.createWebhook({ domain: webhookDomain }));
 app.listen(port, () => console.log("Listening on port", port));
 
 async function getAvatar(ctx, id) {
