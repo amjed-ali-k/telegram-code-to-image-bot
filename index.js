@@ -68,7 +68,11 @@ bot.on(message("text"), async (ctx) => {
 });
 
 const port = process.env.PORT || 3000;
-const webhookDomain = process.env.WEBHOOK_DOMAIN || "https://example.com";
+
+const webhookDomain =
+  process.env.DETA_SPACE_APP_HOSTNAME ||
+  process.env.WEBHOOK_DOMAIN ||
+  "https://example.com";
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));

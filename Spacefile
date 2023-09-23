@@ -10,8 +10,8 @@ micros:
     presets: 
       env:
           - name: WEBHOOK_DOMAIN
-            description: Domain for Telegram Bot WebHook. Enter current micro's domain
-            default: "https://example.deta.app"
+            description: Domain for Telegram Bot WebHook. Micro default domain will be used if not provided.
+            default: ""
           - name: BOT_TOKEN
             description: Telegram Bot Token
             default: "SampleToken"
