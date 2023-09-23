@@ -5,6 +5,7 @@ import { generateCodeImage } from "./lib/carbon.js";
 import { getImage } from "./lib/mods.js";
 import pino from "pino";
 import pretty from "pino-pretty";
+import express from "express";
 
 const logger = pino(
   pretty({
@@ -61,11 +62,18 @@ bot.on(message("text"), async (ctx) => {
   });
 });
 
-bot.launch();
+const port = process.env.PORT || 3000;
+const webhookDomain = process.env.WEBHOOK_DOMAIN || "https://example.com";
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
+
+const app = express();
+
+app.use(await bot.createWebhook({ domain: webhookDomain }));
+
+app.listen(port, () => logger.info("Listening on port", port));
 
 async function getAvatar(ctx, id) {
   try {
