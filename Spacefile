@@ -2,14 +2,11 @@
 v: 0
 micros:
   - name: Telegram-Carbon-Bot
-    src: ./
+    src: .
     engine: nodejs16
     primary: true
-    commands:
-      - npm start
-    dev: npm run dev -- --port $PORT
-    public_routes:
-      - "/webhook/*"
+    dev: pnpm dev -- --port $PORT
+    public: true
     presets: 
       env:
           - name: WEBHOOK_DOMAIN
