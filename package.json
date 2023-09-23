@@ -11,10 +11,16 @@
   "author": "Amjed Ali (https://github.com/amjed-ali-k)",
   "license": "MIT",
   "dependencies": {
+    "@resvg/resvg-js": "^2.4.1",
     "axios": "^1.5.0",
     "carbon-now-cli": "^2.0.0",
+    "colorjs.io": "^0.4.5",
     "dotenv": "^16.3.1",
+    "image-size": "^1.0.2",
     "nodemon": "^3.0.1",
+    "pino-pretty": "^10.2.0",
+    "react": "^18.2.0",
+    "satori": "^0.10.8",
     "telegraf": "^4.14.0"
   }
 }
