@@ -82,6 +82,10 @@ const app = express();
 
 app.use(await bot.createWebhook({ domain: webhookDomain, path: "/webhook" }));
 
+app.get("/", (req, res) => {
+  res.send("Its Working!");
+});
+
 app.listen(port, () => logger.info("Listening on port", port));
 
 async function getAvatar(ctx, id) {
