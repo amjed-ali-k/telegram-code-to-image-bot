@@ -5,3 +5,15 @@ micros:
     src: ./
     engine: nodejs16
     primary: true
+    public_routes:
+      - "/webhook/*"
+    env:
+        - name: WEBHOOK_DOMAIN
+          description: Domain for Telegram Bot WebHook. Enter current micro's domain
+          default: "https://example.deta.app"
+        - name: BOT_TOKEN
+          description: Telegram Bot Token
+          default: "SampleToken"
+        - name: PORT
+          description: Port for the server to listen on
+          default: "3000"

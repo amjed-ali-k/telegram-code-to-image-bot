@@ -14,7 +14,12 @@ const logger = pino(
   })
 );
 
-dotenv.config();
+if (process.env.NODE_ENV === "development") {
+  logger.info("Running in production mode");
+  dotenv.config();
+}
+
+const defaultAvatar = "https://avatars.githubusercontent.com/u/124599?v=4";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.start((ctx) => ctx.reply("Welcome to Code Beautifier Bot"));
@@ -71,7 +76,7 @@ process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
 const app = express();
 
-app.use(await bot.createWebhook({ domain: webhookDomain }));
+app.use(await bot.createWebhook({ domain: webhookDomain, path: "/webhook" }));
 
 app.listen(port, () => logger.info("Listening on port", port));
 
@@ -80,10 +85,8 @@ async function getAvatar(ctx, id) {
     const userAvatar = await ctx.telegram.getUserProfilePhotos(id);
     const avatarId = userAvatar.photos[0][0].file_id;
     const avatar = await ctx.telegram.getFileLink(avatarId);
-    return (
-      avatar.toString() || "https://avatars.githubusercontent.com/u/124599?v=4"
-    );
+    return avatar.toString() || defaultAvatar;
   } catch (error) {
-    return "https://avatars.githubusercontent.com/u/124599?v=4";
+    return defaultAvatar;
   }
 }
