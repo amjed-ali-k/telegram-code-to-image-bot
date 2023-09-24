@@ -29,6 +29,8 @@ const loaderMessages = [
   "This may take a while.",
 ];
 
+let loaderIndex = 0;
+
 bot.on(message("text"), async (ctx) => {
   const botUserName = "@" + bot.botInfo.username;
 
@@ -65,15 +67,16 @@ bot.on(message("text"), async (ctx) => {
   let loaderT = null;
 
   if (isPrivate) {
-    loader = await ctx.reply("Processing your code...");
+    loader = await ctx.reply("Processing your code.");
     console.log(loader);
     loaderT = setInterval(async () => {
       await ctx.telegram.editMessageText(
         ctx.message.chat.id,
         loader.message_id,
         null,
-        Math.random() > 0.5 ? loaderMessages[0] : loaderMessages[1]
+        loaderMessages[0]
       );
+      loaderMessages.push(loaderMessages.shift());
     }, 1000);
   }
   const avatar = getAvatar(ctx, _user.id);
