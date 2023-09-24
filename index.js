@@ -24,9 +24,11 @@ bot.start((ctx) => ctx.reply("Welcome to Code Beautifier Bot"));
 bot.help((ctx) => ctx.reply("Send me a code to beautify"));
 
 const loaderMessages = [
-  "Processing your code...",
-  "Please wait a moment.",
-  "This may take a while.",
+  "🔅 Processing your code...",
+  "🔆 Please wait a moment...",
+  "☀️ This may take a while...",
+  "🌟 Generating image...",
+  "⭐️ Almost done...",
 ];
 
 let loaderIndex = 0;
@@ -78,6 +80,10 @@ bot.on(message("text"), async (ctx) => {
       );
       loaderMessages.push(loaderMessages.shift());
     }, 1000);
+
+    setTimeout(() => {
+      clearInterval(loaderT);
+    }, 1000 * 60);
   }
   const avatar = getAvatar(ctx, _user.id);
 
