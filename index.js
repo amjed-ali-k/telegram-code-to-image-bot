@@ -3,10 +3,12 @@ import { message } from "telegraf/filters";
 import { generateCodeImage } from "./lib/carbon.js";
 import { getImage } from "./lib/mods.js";
 import express from "express";
+import morgan from "morgan";
 
 const logger = { info: console.log };
 
 const defaultAvatar = "https://avatars.githubusercontent.com/u/124599?v=4";
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const port = process.env.PORT || 3000;
@@ -15,8 +17,8 @@ const webhookDomain =
   process.env.WEBHOOK_DOMAIN ||
   "https://example.com";
 
-// process.once("SIGINT", () => bot.stop("SIGINT"));
-// process.once("SIGTERM", () => bot.stop("SIGTERM"));
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
 bot.start((ctx) => ctx.reply("Welcome to Code Beautifier Bot"));
 bot.help((ctx) => ctx.reply("Send me a code to beautify"));
@@ -63,10 +65,10 @@ bot.on(message("text"), async (ctx) => {
   });
 });
 
-const app = express();
+const app = express(morgan("combined"));
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Its Working!");
 });
 
 app.use(await bot.createWebhook({ domain: webhookDomain }));
