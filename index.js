@@ -66,8 +66,9 @@ bot.on(message("text"), async (ctx) => {
 
   if (isPrivate) {
     loader = await ctx.reply("Processing your code...");
-    loaderT = setInterval(() => {
-      ctx.telegram.editMessageText(
+    console.log(loader);
+    loaderT = setInterval(async () => {
+      await ctx.telegram.editMessageText(
         ctx.message.chat.id,
         loader.message_id,
         null,
@@ -87,7 +88,10 @@ bot.on(message("text"), async (ctx) => {
     clearInterval(loaderT);
     // delete loader message
     loader &&
-      ctx.telegram.deleteMessage(ctx.message.chat.id, loader.message_id);
+      (await ctx.telegram.deleteMessage(
+        ctx.message.chat.id,
+        loader.message_id
+      ));
   }
 
   ctx.replyWithPhoto(Input.fromBuffer(image, "code.png"), {
