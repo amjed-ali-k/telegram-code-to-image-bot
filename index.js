@@ -65,14 +65,13 @@ bot.on(message("text"), async (ctx) => {
   });
 });
 
-const app = express(morgan("combined"));
-
+const app = express();
+app.use(morgan(":method :url :status :http-version :response-time "));
 app.get("/", (req, res) => {
   res.send("Its Working!");
 });
-
 app.use(await bot.createWebhook({ domain: webhookDomain }));
-app.listen(port, () => console.log("Listening on port", port));
+app.listen(port, () => console.log("Server listening on port", port));
 
 async function getAvatar(ctx, id) {
   try {
