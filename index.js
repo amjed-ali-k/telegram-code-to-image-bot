@@ -75,7 +75,6 @@ bot.on(message("text"), async (ctx) => {
 
   if (isPrivate) {
     loader = await ctx.reply("🔅 Nice");
-    console.log(loader);
     loaderT = setInterval(async () => {
       await ctx.telegram.editMessageText(
         ctx.message.chat.id,
@@ -85,7 +84,6 @@ bot.on(message("text"), async (ctx) => {
       );
       loaderMessages.push(loaderMessages.shift());
     }, 4000);
-
     setTimeout(() => {
       clearInterval(loaderT);
     }, 1000 * 60);
