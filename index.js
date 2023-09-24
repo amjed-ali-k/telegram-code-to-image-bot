@@ -23,9 +23,17 @@ process.once("SIGTERM", () => bot.stop("SIGTERM"));
 bot.start((ctx) => ctx.reply("Welcome to Code Beautifier Bot"));
 bot.help((ctx) => ctx.reply("Send me a code to beautify"));
 
+const loaderMessages = [
+  "Processing your code...",
+  "Please wait a moment.",
+  "This may take a while.",
+];
+
 bot.on(message("text"), async (ctx) => {
   const botUserName = "@" + bot.botInfo.username;
-  if (ctx.message.chat.type !== "private") {
+
+  const isPrivate = ctx.message.chat.type === "private";
+  if (!isPrivate) {
     if (
       !ctx.message.text.includes(botUserName) &&
       !ctx.message.text.includes("/format")
@@ -51,7 +59,22 @@ bot.on(message("text"), async (ctx) => {
     msg = ctx.message.text.replace(botUserName, "").replace("/format", "");
     _user = ctx.message.from;
   }
-  const codeImage = generateCodeImage(msg);
+  const codeImage = generateCodeImage(msg); // Long task - Takes 10-15 seconds
+
+  let loader = null;
+  let loaderT = null;
+
+  if (isPrivate) {
+    loader = await ctx.reply("Processing your code...");
+    loaderT = setInterval(() => {
+      ctx.telegram.editMessageText(
+        ctx.message.chat.id,
+        loader.message_id,
+        null,
+        Math.random() > 0.5 ? loaderMessages[0] : loaderMessages[1]
+      );
+    }, 1000);
+  }
   const avatar = getAvatar(ctx, _user.id);
 
   const image = await getImage(await codeImage, {
@@ -59,6 +82,13 @@ bot.on(message("text"), async (ctx) => {
     username: _user.username ? `@${_user.username}` : _user.id,
     avatar: await avatar,
   });
+
+  if (isPrivate) {
+    clearInterval(loaderT);
+    // delete loader message
+    loader &&
+      ctx.telegram.deleteMessage(ctx.message.chat.id, loader.message_id);
+  }
 
   ctx.replyWithPhoto(Input.fromBuffer(image, "code.png"), {
     caption: "Here is your code 🎉",
@@ -70,6 +100,7 @@ app.use(morgan(":method :url :status :http-version :response-time "));
 app.get("/", (req, res) => {
   res.send("Its Working!");
 });
+
 app.use(await bot.createWebhook({ domain: webhookDomain }));
 app.listen(port, () => console.log("Server listening on port", port));
 
