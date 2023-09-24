@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pnpm i
+RUN npm i
 
 CMD [ "node", "index.js" ]
 
