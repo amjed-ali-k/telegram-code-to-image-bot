@@ -91,8 +91,8 @@ bot.on(message("text"), async (ctx) => {
   const avatar = getAvatar(ctx, _user.id);
 
   const image = await getImage(await codeImage, {
-    name: _user.first_name + " " + (_user.last_name || ""),
-    username: _user.username ? `@${_user.username}` : _user.id,
+    name: (_user.first_name || "") + " " + (_user.last_name || ""),
+    username: _user.username ? `@${_user.username}` : "Telegram User",
     avatar: await avatar,
   });
 
