@@ -63,13 +63,18 @@ bot.on(message("text"), async (ctx) => {
     msg = ctx.message.text.replace(botUserName, "").replace("/format", "");
     _user = ctx.message.from;
   }
+
+  if (!msg) return;
+  const _msg = msg.trim().toLowerCase();
+  if (_msg.length < 3) return;
+
   const codeImage = generateCodeImage(msg); // Long task - Takes 10-15 seconds
 
   let loader = null;
   let loaderT = null;
 
   if (isPrivate) {
-    loader = await ctx.reply("Processing your code.");
+    loader = await ctx.reply("🔅 Nice");
     console.log(loader);
     loaderT = setInterval(async () => {
       await ctx.telegram.editMessageText(
@@ -79,7 +84,7 @@ bot.on(message("text"), async (ctx) => {
         loaderMessages[0]
       );
       loaderMessages.push(loaderMessages.shift());
-    }, 1000);
+    }, 4000);
 
     setTimeout(() => {
       clearInterval(loaderT);
